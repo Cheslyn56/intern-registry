@@ -3,64 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Internship Registry</title>
+    <title>Internship Registration</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
-    <h1>🎓 Internship Student Registry</h1>
+    <div class="container">
+        <h1>Internship Registration</h1>
+        <form id="studentForm">
+            <input type="text" id="studentName" placeholder="Student Name" required>
+            <input type="text" id="indexNumber" placeholder="Index Number" required>
+            <input type="tel" id="studentTel" placeholder="Student Tel" required>
+            <input type="text" id="classYear" placeholder="Class & Year (e.g., BTech 3 2025)" required>
+            <input type="text" id="companyName" placeholder="Company Name" required>
+            <input type="text" id="companyLocation" placeholder="Company Location" required>
+            <input type="text" id="supervisorName" placeholder="Supervisor Name" required>
+            <input type="tel" id="supervisorTel" placeholder="Supervisor Tel" required>
+            <input type="email" id="supervisorEmail" placeholder="Supervisor Email (Optional)">
+            <button type="submit">Submit</button>
+        </form>
 
-    <div class="form-container">
-        <select id="program">
-            <option value="">Select Program</option>
-            <option value="BTech 3">BTech 3</option>
-            <option value="BTech 2">BTech 2</option>
-            <option value="BTech 1">BTech 1</option>
-        </select>
-
-        <select id="year">
-            <option value="">Select Year</option>
-            <option value="2025">2025</option>
-            <option value="2026">2026</option>
-            <option value="2027">2027</option>
-        </select>
-
-        <input type="text" id="name" placeholder="Student Name">
-        <input type="text" id="index" placeholder="Index Number">
-        <input type="text" id="studentTel" placeholder="Student Tel">
-        <input type="text" id="company" placeholder="Company Name">
-        <input type="text" id="location" placeholder="Company Location">
-        <input type="text" id="supervisor" placeholder="Supervisor Name">
-        <input type="text" id="supervisorTel" placeholder="Supervisor Tel">
-        <input type="email" id="supervisorEmail" placeholder="Supervisor Email">
-        
-        <button id="addStudent">Add Student</button>
-    </div>
-
-    <div class="table-container">
-        <table id="studentTable">
+        <hr>
+        <h2>Submitted Interns</h2>
+        <table id="studentsTable">
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Index</th>
-                    <th>Student Tel</th>
+                    <th>Index No</th>
+                    <th>Tel</th>
+                    <th>Class & Year</th>
                     <th>Company</th>
                     <th>Location</th>
                     <th>Supervisor</th>
-                    <th>Supervisor Tel</th>
-                    <th>Supervisor Email</th>
+                    <th>Sup. Tel</th>
+                    <th>Sup. Email</th>
                 </tr>
             </thead>
             <tbody></tbody>
         </table>
-        <button id="downloadPDF">Download Table as PDF</button>
+        <button id="downloadPdf">Download PDF</button>
     </div>
 
-    <!-- Firebase + JS Libraries -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
-
-    <script src="script.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>
