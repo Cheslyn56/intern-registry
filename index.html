@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internship Registry</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>🎓 Internship Student Registry</h1>
+
+    <div class="form-container">
+        <select id="program">
+            <option value="">Select Program</option>
+            <option value="BTech 3">BTech 3</option>
+            <option value="BTech 2">BTech 2</option>
+            <option value="BTech 1">BTech 1</option>
+        </select>
+
+        <select id="year">
+            <option value="">Select Year</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+            <option value="2027">2027</option>
+        </select>
+
+        <input type="text" id="name" placeholder="Student Name">
+        <input type="text" id="index" placeholder="Index Number">
+        <input type="text" id="studentTel" placeholder="Student Tel">
+        <input type="text" id="company" placeholder="Company Name">
+        <input type="text" id="location" placeholder="Company Location">
+        <input type="text" id="supervisor" placeholder="Supervisor Name">
+        <input type="text" id="supervisorTel" placeholder="Supervisor Tel">
+        <input type="email" id="supervisorEmail" placeholder="Supervisor Email">
+        
+        <button id="addStudent">Add Student</button>
+    </div>
+
+    <div class="table-container">
+        <table id="studentTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Index</th>
+                    <th>Student Tel</th>
+                    <th>Company</th>
+                    <th>Location</th>
+                    <th>Supervisor</th>
+                    <th>Supervisor Tel</th>
+                    <th>Supervisor Email</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <button id="downloadPDF">Download Table as PDF</button>
+    </div>
+
+    <!-- Firebase + JS Libraries -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+    <script src="script.js"></script>
+</body>
+</html>
