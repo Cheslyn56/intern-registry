@@ -8,80 +8,78 @@ const firebaseConfig = {
   appId: "1:451396459592:web:ab21c95311bba790810c7d",
   measurementId: "G-QB384DYCTC"
 };
-
-firebase.initializeApp(firebaseConfig);
+// Initialize Firebase
+const app = firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-const programSelect = document.getElementById("program");
-const yearSelect = document.getElementById("year");
-const tableBody = document.querySelector("#studentTable tbody");
-let unsubscribe = null;
+// Form submit event
+document.getElementById("studentForm").addEventListener("submit", function(event) {
+    event.preventDefault();
 
-// Add Student
-document.getElementById("addStudent").addEventListener("click", () => {
-    const program = programSelect.value;
-    const year = yearSelect.value;
-    if (!program || !year) return alert("Select Program and Year");
-
-    const student = {
-        name: document.getElementById("name").value,
-        index: document.getElementById("index").value,
-        studentTel: document.getElementById("studentTel").value,
-        company: document.getElementById("company").value,
-        location: document.getElementById("location").value,
-        supervisor: document.getElementById("supervisor").value,
-        supervisorTel: document.getElementById("supervisorTel").value,
-        supervisorEmail: document.getElementById("supervisorEmail").value,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    };
-
-    const collectionName = `${program} ${year}`;
-    db.collection(collectionName).add(student).then(() => {
-        alert("Student Added Successfully!");
-        document.querySelectorAll("input").forEach(i => i.value = "");
+    let requiredInputs = document.querySelectorAll("input[required]");
+    let empty = false;
+    requiredInputs.forEach(input => {
+        if (!input.value.trim()) empty = true;
     });
+
+    if (empty) {
+        alert("Please fill in all required fields (email is optional).");
+        return;
+    }
+
+    checkDuplicateAndSave();
 });
 
-// Live table update
-function startRealtimeListener() {
-    tableBody.innerHTML = "";
-    const program = programSelect.value;
-    const year = yearSelect.value;
-    if (!program || !year) return;
+// ✅ NEW: Check if index number already exists
+function checkDuplicateAndSave() {
+    let indexNumber = document.getElementById("indexNumber").value.trim();
 
-    const collectionName = `${program} ${year}`;
-    if (unsubscribe) unsubscribe();
-
-    unsubscribe = db.collection(collectionName)
-        .orderBy("name")
-        .onSnapshot(snapshot => {
-            tableBody.innerHTML = "";
-            snapshot.forEach(doc => {
-                const s = doc.data();
-                tableBody.innerHTML += `
-                    <tr>
-                        <td>${s.name}</td>
-                        <td>${s.index}</td>
-                        <td>${s.studentTel}</td>
-                        <td>${s.company}</td>
-                        <td>${s.location}</td>
-                        <td>${s.supervisor}</td>
-                        <td>${s.supervisorTel}</td>
-                        <td>${s.supervisorEmail}</td>
-                    </tr>
-                `;
-            });
+    db.collection("Interns")
+        .where("indexNumber", "==", indexNumber)
+        .get()
+        .then((querySnapshot) => {
+            if (!querySnapshot.empty) {
+                alert("Your details have already been submitted.");
+            } else {
+                saveToDatabase();
+            }
+        })
+        .catch((error) => {
+            console.error("Error checking duplicates: ", error);
         });
 }
 
-programSelect.addEventListener("change", startRealtimeListener);
-yearSelect.addEventListener("change", startRealtimeListener);
+// Save data to Firestore
+function saveToDatabase() {
+    let studentName = document.getElementById("studentName").value;
+    let indexNumber = document.getElementById("indexNumber").value;
+    let studentTel = document.getElementById("studentTel").value;
+    let companyName = document.getElementById("companyName").value;
+    let companyLocation = document.getElementById("companyLocation").value;
+    let supervisorName = document.getElementById("supervisorName").value;
+    let supervisorTel = document.getElementById("supervisorTel").value;
+    let supervisorEmail = document.getElementById("supervisorEmail").value; // optional
 
-// PDF Download
-document.getElementById("downloadPDF").addEventListener("click", () => {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+    db.collection("Interns").add({
+        studentName,
+        indexNumber,
+        studentTel,
+        companyName,
+        companyLocation,
+        supervisorName,
+        supervisorTel,
+        supervisorEmail
+    })
+    .then(() => {
+        alert("Data saved successfully!");
+        document.getElementById("studentForm").reset();
+    })
+    .catch(error => {
+        console.error("Error saving data: ", error);
+    });
+}
     doc.text(`${programSelect.value} ${yearSelect.value} Interns`, 14, 10);
     doc.autoTable({ html: '#studentTable', startY: 20 });
     doc.save(`${programSelect.value}-${yearSelect.value}-interns.pdf`);
 });
+
