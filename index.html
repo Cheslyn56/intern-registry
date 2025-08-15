@@ -3,51 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Internship Registration</title>
+    <title>Student Internship Form</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <!-- jsPDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <h1>Internship Registration</h1>
         <form id="studentForm">
-            <input type="text" id="studentName" placeholder="Student Name" required>
-            <input type="text" id="indexNumber" placeholder="Index Number" required>
-            <input type="tel" id="studentTel" placeholder="Student Tel" required>
-            <input type="text" id="classYear" placeholder="Class & Year (e.g., BTech 3 2025)" required>
-            <input type="text" id="companyName" placeholder="Company Name" required>
-            <input type="text" id="companyLocation" placeholder="Company Location" required>
-            <input type="text" id="supervisorName" placeholder="Supervisor Name" required>
-            <input type="tel" id="supervisorTel" placeholder="Supervisor Tel" required>
-            <input type="email" id="supervisorEmail" placeholder="Supervisor Email (Optional)">
-            <button type="submit">Submit</button>
-        </form>
+            <h2>🎓 Internship Registration</h2>
 
-        <hr>
-        <h2>Submitted Interns</h2>
-        <table id="studentsTable">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Index No</th>
-                    <th>Tel</th>
-                    <th>Class & Year</th>
-                    <th>Company</th>
-                    <th>Location</th>
-                    <th>Supervisor</th>
-                    <th>Sup. Tel</th>
-                    <th>Sup. Email</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        <button id="downloadPdf">Download PDF</button>
+            <div class="form-group">
+                <label for="program">Program</label>
+                <select id="program" required>
+                    <option value="">-- Select Program --</option>
+                    <option value="BTech 3">BTech 3</option>
+                    <option value="BTech 2">BTech 2</option>
+                    <option value="Diploma">Diploma</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="year">Year</label>
+                <select id="year" required>
+                    <option value="">-- Select Year --</option>
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                    <option value="2027">2027</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Student Name</label>
+                <input type="text" id="studentName" placeholder="Enter full name" required>
+            </div>
+
+            <div class="form-group">
+                <label>Index Number</label>
+                <input type="text" id="indexNumber" placeholder="e.g. 123456" required>
+            </div>
+
+            <div class="form-group">
+                <label>Student Tel</label>
+                <input type="tel" id="studentTel" placeholder="e.g. 024xxxxxxx" required>
+            </div>
+
+            <div class="form-group">
+                <label>Company Name</label>
+                <input type="text" id="companyName" placeholder="Company Name" required>
+            </div>
+
+            <div class="form-group">
+                <label>Company Location</label>
+                <input type="text" id="companyLocation" placeholder="Location" required>
+            </div>
+
+            <div class="form-group">
+                <label>Supervisor Name</label>
+                <input type="text" id="supervisorName" placeholder="Supervisor's Full Name" required>
+            </div>
+
+            <div class="form-group">
+                <label>Supervisor Tel</label>
+                <input type="tel" id="supervisorTel" placeholder="e.g. 024xxxxxxx" required>
+            </div>
+
+            <div class="form-group">
+                <label>Supervisor Email (Optional)</label>
+                <input type="email" id="supervisorEmail" placeholder="example@mail.com">
+            </div>
+
+            <button type="button" onclick="checkDuplicateAndSave()">🚀 Submit</button>
+        </form>
     </div>
 
-    <script src="main.js"></script>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
+
