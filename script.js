@@ -12,67 +12,76 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-function checkDuplicateAndSave() {
-    let program = document.getElementById("program").value;
-    let year = document.getElementById("year").value;
-    let indexNumber = document.getElementById("indexNumber").value;
+const programSelect = document.getElementById("program");
+const yearSelect = document.getElementById("year");
+const tableBody = document.querySelector("#studentTable tbody");
+let unsubscribe = null;
 
-    if (!program || !year) {
-        alert("Please select Program and Year.");
-        return;
-    }
+// Add Student
+document.getElementById("addStudent").addEventListener("click", () => {
+    const program = programSelect.value;
+    const year = yearSelect.value;
+    if (!program || !year) return alert("Select Program and Year");
 
-    let collectionName = `${program} ${year} Interns`;
+    const student = {
+        name: document.getElementById("name").value,
+        index: document.getElementById("index").value,
+        studentTel: document.getElementById("studentTel").value,
+        company: document.getElementById("company").value,
+        location: document.getElementById("location").value,
+        supervisor: document.getElementById("supervisor").value,
+        supervisorTel: document.getElementById("supervisorTel").value,
+        supervisorEmail: document.getElementById("supervisorEmail").value,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
 
-    db.collection(collectionName)
-        .where("indexNumber", "==", indexNumber)
-        .get()
-        .then(snapshot => {
-            if (!snapshot.empty) {
-                alert("This index number has already submitted details for this program/year.");
-            } else {
-                saveToDatabase(collectionName);
-            }
-        })
-        .catch(error => {
-            console.error("Error checking duplicate: ", error);
+    const collectionName = `${program} ${year}`;
+    db.collection(collectionName).add(student).then(() => {
+        alert("Student Added Successfully!");
+        document.querySelectorAll("input").forEach(i => i.value = "");
+    });
+});
+
+// Live table update
+function startRealtimeListener() {
+    tableBody.innerHTML = "";
+    const program = programSelect.value;
+    const year = yearSelect.value;
+    if (!program || !year) return;
+
+    const collectionName = `${program} ${year}`;
+    if (unsubscribe) unsubscribe();
+
+    unsubscribe = db.collection(collectionName)
+        .orderBy("name")
+        .onSnapshot(snapshot => {
+            tableBody.innerHTML = "";
+            snapshot.forEach(doc => {
+                const s = doc.data();
+                tableBody.innerHTML += `
+                    <tr>
+                        <td>${s.name}</td>
+                        <td>${s.index}</td>
+                        <td>${s.studentTel}</td>
+                        <td>${s.company}</td>
+                        <td>${s.location}</td>
+                        <td>${s.supervisor}</td>
+                        <td>${s.supervisorTel}</td>
+                        <td>${s.supervisorEmail}</td>
+                    </tr>
+                `;
+            });
         });
 }
 
-function saveToDatabase(collectionName) {
-    let studentName = document.getElementById("studentName").value;
-    let indexNumber = document.getElementById("indexNumber").value;
-    let studentTel = document.getElementById("studentTel").value;
-    let companyName = document.getElementById("companyName").value;
-    let companyLocation = document.getElementById("companyLocation").value;
-    let supervisorName = document.getElementById("supervisorName").value;
-    let supervisorTel = document.getElementById("supervisorTel").value;
-    let supervisorEmail = document.getElementById("supervisorEmail").value;
-    let program = document.getElementById("program").value;
-    let year = document.getElementById("year").value;
+programSelect.addEventListener("change", startRealtimeListener);
+yearSelect.addEventListener("change", startRealtimeListener);
 
-    if (!studentName || !indexNumber || !studentTel || !companyName || !companyLocation || !supervisorName || !supervisorTel) {
-        alert("Please fill all required fields.");
-        return;
-    }
-
-    db.collection(collectionName).add({
-        studentName,
-        indexNumber,
-        studentTel,
-        companyName,
-        companyLocation,
-        supervisorName,
-        supervisorTel,
-        supervisorEmail,
-        program,
-        year
-    })
-    .then(() => {
-        alert("✅ Data saved successfully!");
-        document.getElementById("studentForm").reset();
-    })
-    .catch(error => {
-        console.error("Error saving data: ", error);
-    });
-}
+// PDF Download
+document.getElementById("downloadPDF").addEventListener("click", () => {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.text(`${programSelect.value} ${yearSelect.value} Interns`, 14, 10);
+    doc.autoTable({ html: '#studentTable', startY: 20 });
+    doc.save(`${programSelect.value}-${yearSelect.value}-interns.pdf`);
+});
