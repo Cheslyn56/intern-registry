@@ -1,59 +1,82 @@
-body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background: linear-gradient(135deg, #6a11cb, #2575fc);
-    color: white;
+/* Global Reset */
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
-h1 {
-    margin-top: 20px;
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #a1c4fd, #c2e9fb);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
-.form-container {
+/* Animated Background */
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Form Container */
+.container {
     background: rgba(255, 255, 255, 0.15);
-    padding: 20px;
-    margin: 20px auto;
+    backdrop-filter: blur(12px);
+    padding: 30px;
+    border-radius: 20px;
     width: 90%;
-    max-width: 500px;
-    border-radius: 10px;
-    backdrop-filter: blur(10px);
+    max-width: 400px;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
 }
 
-input, select, button {
-    width: 90%;
+/* Heading */
+h2 {
+    text-align: center;
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: white;
+}
+
+input, select {
+    width: 100%;
     padding: 10px;
-    margin: 5px 0;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
 }
 
+/* Button */
 button {
-    background-color: gold;
-    color: black;
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(45deg, #ff758c, #ff7eb3);
+    color: white;
+    font-size: 16px;
     font-weight: bold;
     cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.table-container {
-    margin: 20px auto;
-    width: 95%;
-    overflow-x: auto;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-    color: black;
-}
-
-th, td {
-    padding: 8px;
-    border: 1px solid #ccc;
-}
-
-th {
-    background-color: #f2f2f2;
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(255, 118, 136, 0.4);
 }
