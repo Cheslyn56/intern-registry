@@ -68,25 +68,39 @@ function startRealtimeListener() {
     if (unsubscribe) unsubscribe();
 
     unsubscribe = db.collection(collectionName)
-        .orderBy("name")
-        .onSnapshot(snapshot => {
-            tableBody.innerHTML = "";
-            snapshot.forEach(doc => {
-                const s = doc.data();
-                tableBody.innerHTML += `
-                    <tr>
-                        <td>${s.name}</td>
-                        <td>${s.index}</td>
-                        <td>${s.studentTel}</td>
-                        <td>${s.company}</td>
-                        <td>${s.location}</td>
-                        <td>${s.supervisor}</td>
-                        <td>${s.supervisorTel}</td>
-                        <td>${s.supervisorEmail}</td>
-                    </tr>
-                `;
-            });
+    .orderBy("name")
+    .onSnapshot(snapshot => {
+        tableBody.innerHTML = "";
+
+        const seenIndexes = new Set(); // ✅ track seen indexes
+        let i = 0; // numbering
+
+        snapshot.forEach(doc => {
+            const s = doc.data();
+
+            if (seenIndexes.has(s.index)) {
+                // 🔴 skip duplicate index
+                return;
+            }
+            seenIndexes.add(s.index);
+
+            i++;
+            tableBody.innerHTML += `
+                <tr>
+                    <td>${i}</td>
+                    <td>${s.name}</td>
+                    <td>${s.index}</td>
+                    <td>${s.studentTel}</td>
+                    <td>${s.company}</td>
+                    <td>${s.location}</td>
+                    <td>${s.supervisor}</td>
+                    <td>${s.supervisorTel}</td>
+                    <td>${s.supervisorEmail}</td>
+                </tr>
+            `;
         });
+    });
+
 }
 
 programSelect.addEventListener("change", startRealtimeListener);
@@ -99,5 +113,4 @@ document.getElementById("downloadPDF").addEventListener("click", () => {
     doc.text(`${programSelect.value} ${yearSelect.value} Interns`, 14, 10);
     doc.autoTable({ html: '#studentTable', startY: 20 });
     doc.save(`${programSelect.value}-${yearSelect.value}-interns.pdf`);
-
 });
